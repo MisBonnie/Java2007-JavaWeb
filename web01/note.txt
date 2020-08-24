@@ -1,0 +1,149 @@
+1.xml：文本标记语言
+	标签  属性  属性值  标签体
+  html: 专注于页面展示
+  xml: 专注于文本内容记录	
+  	   和 properties 文件格式 都被用于配置文件
+
+  1.大小写敏感
+  2.属性值不能省略
+  3.属性值要加引号
+  4.标签名可以自定义
+
+  指定了xml的版本信息，以及文件编码，必须在文件第一行
+  <?xml version="1.0" encoding="utf-8" ?>
+
+  XML解析：dom4j.jar
+
+  xml约束：
+  	DTD约束  dtd文件
+  		使用步骤：详见xml文件
+  		添加位置：根标签之前 <!DOCTYPE xxx>
+  	Schema约束 - 命名空间约束  xsd文件
+  		使用步骤：详见xml文件
+  		约束添加位置：根标签内部
+
+2.JavaEE：13种规范  Servlet JSP
+	C/S：Client Server		
+		例如：QQ 迅雷 有客户端的
+
+		优势：不需要实时下载素材，加载很快，对于网络要求低
+			 用户体检比较好
+		劣势：需要安装客户端，需要手动更新
+	B/S：Browser Server
+		例如：京东 网站 只需要浏览器的
+
+		优势：不需要安装客户端，不需要手动更新
+		劣势：所有的资源实时加载，对于网络要求高
+
+  服务器：安装了服务器软件的计算机
+  服务器软件：可以接受请求，计算数据，返回响应的软件
+  协议：
+  	TCP：传输安全，三次握手，效率比较低
+  	UDP：大量，不安全传输
+  	HTTP：无状态协议
+  	HTTPS：安全
+
+
+  服务器软件：
+    Tomcat：Apache组织，纯Java开发
+
+  启动服务器：
+    1.直接双击bin/startup.bat 
+    2.配置环境变量 bin, cmd中输入命令：startup
+  关闭服务器：
+  	1.直接双击bin/shutdown.bat 
+    2.配置环境变量 bin, cmd中输入命令：shutdown
+
+  地址：http://localhost:8080/
+
+  ip: 计算机在网络中的唯一标识
+  端口: 软件在计算机中的唯一标识
+
+  问题：
+    1.缺少环境变量
+      解决：添加对应的环境变量  
+    2.Caused by: java.net.BindException: Address already in use  地址被占用（端口被占用）
+      解决：1.查看哪个进程占用了8080端口，并强制杀死
+      	   2.更改tomcat服务器端口号
+      	   	 conf/server.xml
+      	   	 http协议默认端口号是80, 访问时可以省略
+  
+  服务器中部署应用 Application
+  	https://www.jd.com/
+  	https://search.jd.com/Search --> 服务器的资源地址
+
+  	应用格式：
+  	  hello - 应用根目录
+  	    |- 各种资源(html、css、js、image....)
+  	    |- 
+
+  部署方式
+    1.直接将hello文件夹拷贝到 webapps 中，重启服务器
+      访问资源: http://localhost:8080/虚拟目录/.../资源名
+       		  http://localhost:8080/hello/index.html
+      虚拟目录: hello文件夹的名字，就是应用的根目录
+      卸载：删除hello文件夹，重启服务器
+    
+    2.将hello文件打包成war文件，将hello.war文件复制到 webapps 中，服务器正在运行，会自动解压war文件
+      虚拟目录：war文件名的名字
+      卸载：删除hello.war文件
+
+    3.修改conf/server.xml文件，重启服务器
+      <Context path="hi" docBase="/Users/bonnie/Desktop/hello" />
+
+      path: 虚拟目录 http://localhost:8080/hi/index.html
+      docBase: 应用的绝对路径
+      卸载：将Context标签删除，重启服务器
+
+    4.在conf/Catalina/localhost/hello.xml
+      文件内容：<Context docBase="/Users/bonnie/Desktop/hello" />
+      虚拟目录：xml文件的名字
+      卸载：hello.xml文件删除
+
+  idea新建web工程
+  	编译后：out/artifacts/web01_war_exploded -> web应用
+
+  JavaEE可以让web服务器访问到，需要用到Servlet规范
+  	1.完成Servlet步骤
+  	  a.自定义类，实现 Servlet 接口
+  	  b.着重实现 service 方法
+  	      System.out.println("Hello Kitty service");
+          response.getWriter().println(new Date());
+      c.修改web.xml配置文件，注册servlet
+          <servlet>
+	        <servlet-name>Hello</servlet-name>
+	        <servlet-class>com.zzxx.a_hello.HelloKitty</servlet-class>
+	      </servlet>
+	      <servlet-mapping>
+	        <servlet-name>Hello</servlet-name>
+	        <url-pattern>/hi</url-pattern>
+	      </servlet-mapping>
+	  d.启动服务器运行，访问这个Servlet资源
+	  	  http://localhost:8080/web01_war_exploded/hi
+
+  Servlet的生命周期：
+    init: 创建对象后，初始化时执行
+    	  默认第一次发送请求时创建，而且只创建一次
+    	  设置服务器启动时创建
+    	  	<load-on-startup>数字<load-on-startup>
+    service: 每次接收到请求时执行
+    destroy: 销毁之前执行
+    	     服务器正常关闭时销毁
+
+  ServletConfig：这个Servlet对应的配置信息
+
+  Servlet的体系结构：
+    |- 抽象的实现类 GenericServlet
+    	|- 抽象的子类 HttpServlet
+    		 实现了service方法，将请求和响应转换后
+    		 调用this.service() -> 判断请求方式，
+    		 从而决定调用 doGet、doPost
+  进化：继承 HttpServlet，重写doGet、doPost
+   @WebServlet("/Demo02Servlet")取代servlet标签
+   	使用前提：web应用版本在3.0及以上
+
+
+
+
+
+
