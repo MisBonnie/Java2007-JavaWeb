@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>注册</title>
+		<style type="text/css">
+			body {
+				background: url("img/regist_bg.jpg");
+				padding-top: 25px;
+				font-family: "microsoft yahei";
+				font-size: 11pt;
+			}
+
+			.rg_layout {
+				width: 900px;
+				height: 550px;
+				border: 8px solid #CCCCCC;
+				background-color: white;
+				/*让div水平居中*/
+				margin: auto;
+				padding-top: 40px;
+				box-sizing: border-box;
+			}
+
+			.rg_top {
+				/* border: 1px solid red; */
+				width: 60%;
+				margin: auto;
+			}
+
+			.rg_top span:first-child {
+				color: #3D64AA;
+				font-size: 20px;
+				margin-right: 10px;
+			}
+
+			.rg_form {
+				padding-top: 10px;
+				/* border: 1px solid red; */
+				width: 70%;
+				margin: auto;
+			}
+
+			.td_left {
+				width: 100px;
+				text-align: right;
+				height: 45px;
+			}
+
+			.td_right {
+				padding-left: 50px;
+			}
+
+			#username,#password,#email,#name,#repassword,#birthday,#checkcode {
+				width: 251px;
+				height: 32px;
+				border: 1px solid #A6A6A6;
+				/*设置边框圆角*/
+				border-radius: 5px;
+				padding-left: 10px;
+			}
+
+			#checkcode {
+				width: 110px;
+			}
+
+			#img_check {
+				height: 32px;
+				/* 垂直方向居中 */
+				vertical-align: middle;
+				margin-left: 20px;
+			}
+
+			#btn_sub {
+				width: 105px;
+				height: 36px;
+				background-color: #BE2934;
+				border: 1px solid #BE2934;
+				color: white;
+			}
+		</style>
+		<script src="js/jquery-1.11.0.min.js"></script>
+		<script src="js/jquery.validate.min.js"></script>
+	</head>
+	<body>
+		<div class="rg_layout">
+			<div class="rg_top">
+				<span>会员注册 </span> <span>USER REGISTER</span>
+			</div>
+			<script>
+				$(function() {
+					// 校验表单  {}: json就是JS的对象
+					$("#regForm").validate({
+						// 校验的规则
+						rules: {
+							// 校验的输入框 input 对应的name
+							username: {
+								// 用户名校验的选项
+								required: true,
+								minlength: 6,
+								maxlength: 18
+							},
+							password: {
+								required: true
+							},
+							repassword: {
+								required: true,
+								equalTo: password
+							},
+							gender: {
+								required: true
+							}
+						},
+						messages: {
+							username: {
+								required: "用户名不能为空",
+								minlength: '请输入6~18位',
+								maxlength: '请输入6~18位'
+							},
+							password: {
+								required: "密码不能为空"
+							},
+							repassword: {
+								required: "密码不能为空",
+								equalTo: "两次密码不一致"
+							},
+							gender: {
+								required: "必须选择性别"
+							}
+						}
+					});
+				})
+			</script>
+			<div class="rg_form">
+				<!--定义表单 form-->
+				<form action="/web02_war_exploded/RegistServlet" id="regForm" method="get">
+					<table>
+						<tr>
+							<td class="td_left"><label for="username">用户名</label></td>
+							<td class="td_right">
+								<input type="text" name="username" id="username" placeholder="请输入用户名"></td>
+							<td><label for="username" class="error"></label></td>
+						</tr>
+
+						<tr>
+							<td class="td_left"><label for="password">密码</label></td>
+							<td class="td_right"><input type="password" name="password" id="password" placeholder="请输入密码"></td>
+						</tr>
+						<tr>
+							<td class="td_left"><label for="repassword">确认密码</label></td>
+							<td class="td_right"><input type="password" id="repassword" name="repassword" placeholder="请输入确认密码"></td>
+						</tr>
+						<tr>
+							<td class="td_left"><label for="email">Email</label></td>
+							<td class="td_right"><input type="email" name="email" id="email" placeholder="请输入邮箱"></td>
+						</tr>
+
+						<tr>
+							<td class="td_left"><label for="name">姓名</label></td>
+							<td class="td_right"><input type="text" name="realname" id="name" placeholder="请输入姓名"></td>
+						</tr>
+
+						<tr>
+							<td class="td_left"><label>性别</label></td>
+							<td class="td_right">
+								<input type="radio" name="gender" value="m"> 男
+								<input type="radio" name="gender" value="f"> 女
+							</td>
+							<td><label for="gender" class="error"></label></td>
+						</tr>
+
+						<tr>
+							<td class="td_left"><label for="birthday">出生日期</label></td>
+							<td class="td_right"><input type="date" name="birthday" id="birthday" placeholder="请输入出生日期"></td>
+						</tr>
+
+<!--						<tr>-->
+<!--							<td class="td_left"><label for="checkcode">验证码</label></td>-->
+<!--							<td class="td_right"><input type="text" name="checkcode" id="checkcode" placeholder="请输入验证码">-->
+<!--								<img id="img_check" src="img/yanzhengma.png">-->
+<!--							</td>-->
+<!--						</tr>-->
+						<tr>
+							<td colspan="2" align="center"><input type="submit" id="btn_sub" value="注册"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

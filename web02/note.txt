@@ -1,0 +1,109 @@
+回顾:
+  Tomcat服务器
+  Web应用程序
+    |- 静态资源
+    |- WEB-INF
+        |- web.xml: 应用相关的配置,Servlet
+        |- classes: java编译后的字节码文件
+
+  Servlet 接口
+  HttpServlet: doGet/doPost
+
+  @WebServlet("/xx")
+  <servlet>
+    <servlet-name>自定义
+    <servlet-class>Servlet的全限定类名
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>自定义
+    <url-pattern>/自定义路径
+  </servlet-mapping>
+
+  Servlet对象: 一次
+    默认第一次接收到请求时创建 <load-on-startup>
+    服务器关闭时销毁
+  request对象
+  response对象
+
+Servlet: Server + Applet
+
+1.web2.5和web2.5以上的区别
+  web2.5不能使用 @WebServlet 之类的注解
+  web2.5以上就可以使用注解  所以可以不使用web.xml,但是建议加上
+2.Servlet的配置
+    <!-- 方式一: 完全匹配 只能通过/demo01 来访问这个资源 -->
+    <url-pattern>/demo01</url-pattern>
+    <url-pattern>/demo011</url-pattern>
+    <!-- 方式二: 目录匹配, 通配符 *  -->
+    <url-pattern>/*</url-pattern>
+    <url-pattern>/hi/*</url-pattern>
+    <!-- 方式三: 后缀匹配 -->
+    <url-pattern>*.do</url-pattern>
+    <!-- 特殊的匹配: / 所有资源,默认的配置,缺省的配置 -->
+    <url-pattern>/</url-pattern>
+3.欢迎页面设置
+    <!-- 设置应用的默认首页 -->
+    <welcome-file-list>
+        <welcome-file>demo01</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+4.注解: @Test @Before @Override
+    @WebServlet(属性名=属性值)
+    注解的属性: 类型 属性名()
+    当注解中只有一个属性,并且属性名为value时,属性名可以省略
+
+5.Servlet对象: 一次
+    默认第一次接收到请求时创建 <load-on-startup>
+    服务器关闭时销毁
+
+    在程序运行期间, 只产生一个对象的类, 称之为"单例模式"
+    单例模式是线程不安全的, 所以Servlet中通常不会定义成员变量
+
+    设计模式: 设计的模板/套路, 一共23种
+      1.单例模式: 在程序运行期间, 只产生一个对象
+      2.工厂模式: 创建对象的工厂  DruidDataSourceBeanFactory
+      3.装饰者模式: 增强方法
+      4.代理模式: 增强方法, 动态代理 CGlib代理
+
+6.ServletContext 对象, 应用上下文, 一个应用中只有一个ServletContext对象
+    1.获得 servlet对象(this), request对象, ServletConfig对象
+    2.作用
+        获得虚拟目录
+        获得应用的初始化参数
+        获得应用文件的绝对路径
+        作为域对象
+    3.生命周期
+        创建: 服务器启动
+        销毁: 服务器关闭
+    4.域对象: 存数据, 取数据   Map<String, Object>
+        范围: 整个应用运行期间, 所有客户端和所有资源共享
+        setAttribute("name", Object)
+        getAttribute("name")
+        removeAttribute("name")
+
+        统计网站的访问量
+
+7.HttpRequest
+    Http协议: 客户端和服务器之间数据传输的规范
+             包含 请求 + 响应
+
+8.404: 资源未找到
+      1.浏览器中地址写错
+      2.地址对应的资源不存在
+  500: 代码出现异常
+
+9.Get请求默认字符集: 跟tomcat一致
+    解决乱码: username = new String(username.getBytes("ISO8859-1"), "UTF-8");
+  Post请求默认字符集: ISO8859-1
+    解决乱码: request.setCharacterEncoding("UTF-8");
+
+10.BeanUtils工具
+    temp/resources/jar包/apache-commons
+
+课后问题:
+  使用第四种方式, 将web02应用手动部署在外部tomcat中
+  查看外部tomcat默认字符集, get请求接收到参数的字符集
+
+
+
+
