@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单</title>
+    <script src="/web03/js/jquery-1.11.0.min.js"></script>
+    <script>
+        $(function(){
+            $("#checkCode").click(function() {
+                // $("#checkCode").prop("src", "/web03/CheckImgServlet")
+                this.src = "/web03/CheckImgServlet?random=" + Math.random();
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- action: 将表单数据提交给服务器的哪个资源 -->
+    <form action="/web03/Demo09Servlet" method="get">
+        用户名: <input type="text" name="username"/><br>
+        密码: <input type="password" name="password"/><br>
+        验证码: <input type="text" name="check_code"/>
+        <img id="checkCode" src="/web03/CheckImgServlet"/><br/>
+        <input type="submit" value="登录"/>
+    </form>
+</body>
+</html>

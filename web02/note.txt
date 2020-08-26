@@ -99,11 +99,13 @@ Servlet: Server + Applet
 
 10.BeanUtils工具
     temp/resources/jar包/apache-commons
+    BeanUtils.populate
 
 课后问题:
   使用第四种方式, 将web02应用手动部署在外部tomcat中
   查看外部tomcat默认字符集, get请求接收到参数的字符集
 
+案例: 注册
 
 
 

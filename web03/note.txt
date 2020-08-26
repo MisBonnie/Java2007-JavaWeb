@@ -1,0 +1,146 @@
+回顾:
+  ServletContext: application
+    1.getContextPath(): 虚拟目录
+    2.getInitParam(name): 初始化参数
+    3.getRealPath("应用中资源路径"): 绝对路径
+    4.域对象 setAttribute(name, Object)
+            Object getAttribute(name)
+            removeAttribute(name)
+      范围: 整个服务器启动期间
+  Servlet的url配置
+    1. /demo
+    2. /*    /hello/*
+    3. *.do  *.user  *.action
+
+  HttpServletRequest
+    请求行: GET/POST  URI  http/1.1
+    请求头: Map  user-agent referer
+    请求体: POST请求参数
+
+    获得请求参数:
+        String getParameter(name)
+        String[] getParameterValues(name)
+        Map<String, String[]> getParameterMap()
+    乱码:
+       POST: request.setCharacterEncoding("utf-8")
+       GET: 和Tomcat一致
+    注册案例:
+      BeanUtils.populate(obj, map)
+
+servlet的生命周期:
+    创建: 默认第一次接收请求
+    销毁: 服务器关闭
+
+request
+    域对象使用: Map
+        setAttribute(name, Object)
+        Object getAttribute(name)
+        removeAttribute(name)
+    创建: 接收请求时
+    销毁: 请求结束时
+    范围: 一次请求的过程
+         作用: 在请求转发时数据传递
+    请求转发的适用场景:
+        通常是Servlet 转发到 jsp 时使用
+        一个Servlet事情做了一半, 就需要转发到另一个资源继续完成
+响应对象: HttpServletResponse
+   响应行: 状态码
+   响应头: Map  setHeader(name, value)
+   响应体: 输出流, write/println写出到response缓冲区
+          response缓冲区默认ISO8859-1字符集
+          response.setContentType("text/html;charset=utf-8");
+
+          实现动态页面效果
+
+   状态码: 200 - 正常返回响应
+          404 - 资源未找到, 路径错误
+          500 - 代码出现异常
+          405 - 服务方法出错 service, doGet, doPost
+          304 - 访问缓存
+          302 - 重定向
+   重定向特点:
+     1.客户端发送了两次请求
+     2.浏览器地址栏会发生改变, 变成第二次请求地址
+     3.不能使用request域来分享数据
+   重定向适用场景:
+     第一个资源已经做完了一件事情, 需要做下一件事情
+
+ 案例1: 图片验证码
+   通过response的输出流, 写出一张图片
+
+ 案例2: 文件下载 - 字节流
+   .txt .jpg .zip .mp3 .mp4 .flv
+   1.超链接的方式: 浏览器能解析的文件就会直接显示, 不能解析的才会下载
+   2.通过Servlet方式下载:
+      1.response.getOutputStream()
+        输入流: 文件路径 - application.getRealPath()
+      2.设置响应内容类型 MIME Type
+        根据文件的后缀名自动识别 application.getMimeType("xx.zip");
+        text/html    tomcat/conf/web.xml
+
+路径写法:
+  1.绝对路径  /xx: 绝对路径URI   http://xxx: 绝对路径URL
+      URL: 给客户端使用, 客户端访问服务器时必须使用的路径
+           例如: form action="url"
+                a href="url"
+                img src="url"
+                link href="url"
+                script src="url"
+                重定向: url
+      URI: 给客户端使用可以用URI, 或者给服务器使用必须用URI
+           给服务器使用: 转发, 不需要使用虚拟目录
+           给客户端使用: 必须加虚拟目录
+
+           如果客户端通过URI来访问服务器, 会将URI拼接成URL
+
+      资源在同一个服务器中, 可以将URL简化成URI
+          http://localhost:8080/web03/form.html
+          /web03/CheckImgServlet
+      不在同一个服务器中, 只能填完整的URL
+          http://www.baidu.com
+
+  2.相对路径
+
+小结:
+  request:
+    1.通过request获得ServletContext对象
+    2.通过request获得参数, getParameter..()
+    3.request域对象, 配合请求转发使用
+      getRequestDispatcher("uri").forward(req, resp);
+  response:
+    1.获得流, 写出内容 getWriter()
+    2.获得流, 复制文件 getOutputStream()
+    3.设置响应类型 response.setContentType("xx/xx[mime type]")
+    4.重定向, response.sendRedirect("url/uri")
+
+会话技术
+   一次会话: 客户端连接上服务器开始, 客户端退出结束
+            会产生多次请求
+
+在会话期间, 存储数据
+Cookie: 客户端技术, 不安全[客户端可以删除,查看], 减轻服务器压力
+    1.向客户端存储cookie
+      response.addCookie(cookie) - 本质是response.setHeader("set-cookie")
+    2.从客户端获取cookie
+      request.getCookies() - 本质是request.getHeader("cookie")
+
+    cookie默认的生命周期: new 开始, 到会话结束
+        设置持久化时间
+            cookie.setMaxAge(int 秒);
+        设置时间=0, 立即删除
+        设置时间=-1, 恢复默认
+    设置cookie的携带路径:
+        cookie.setPath(): / -> 当前服务器所有资源
+                          /web03 -> 当前应用所有资源
+                          /web03/Demo08Servlet -> 单纯只有Demo08Servlet资源
+        默认: 当前目录
+             set-cookie的资源路径: http://localhost:8080/web03/cookie/Demo07Servlet
+
+    小结: 只有当cookie的name和path一致的时候才会认为是同一个cookie
+         Cookie c1 = new Cookie("name","zhangsan");
+
+         Cookie c2 = new Cookie("name","zhangsan);
+         c2.setPath("/");
+
+Session: 服务器技术, 安全, 服务区压力较大
+
