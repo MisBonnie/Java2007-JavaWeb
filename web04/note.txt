@@ -1,0 +1,132 @@
+回顾:
+  request: 请求行 请求头 请求体
+     域对象: 一次请求
+     转发 request.getRequestDispatcher("/uri").forward(request, response)
+  response:
+     响应行: 状态码200 304 302
+     响应头: Map set-cookie
+     响应体: getOutputStream() getWriter()
+        setContentType("text/html;charset=utf-8")
+        文件下载,设置响应头,告诉浏览器文件打开方式
+          setHeader("Content-Disposition","attachment;filename=xx")
+
+     重定向: 两次请求
+        response.sendRedirect("url/uri")
+  Cookie: 会话技术
+    1次会话: 客户端连接上服务器开始, 到客户端断开连接结束
+            多次请求
+    Cookie存储在本地客户端
+       response.addCookie()
+       Cookie cookie = new Cookie(name, value)
+       cookie.setPath("当前目录/虚拟目录")
+       cookie.setMaxAge(秒)
+    cookie存储: 响应头  set-cookie
+    cookie获取: 请求头  cookie
+       request.getCookies()
+
+  Session: 服务器中的会话技术
+     存储数据 - 域对象
+     域对象范围: 一次会话
+
+     获得session对象:
+       // 当客户端第一次调用该方法, 服务器会创建一个session对象并返回
+       // 当客户端再次调用该方法, 服务器直接将之前的session返回
+       request.getSession();
+
+       服务器第一次为客户端创建Session对象的时候, 会分配一个JSESSIONID编号
+       并且将 JSESSIONID 传递给客户端的cookie进行保存
+
+       一次会话结束, 下次会话想要继续访问之前的session,
+       需要将 JSESSIONID 进行持久化
+
+     session的生命周期:
+       创建: 客户端第一次调用getSession()方法时
+       销毁: 1.手动销毁 session.invalidate();
+            2.服务器非正常关闭
+                注:服务器正常关闭, session不会消失, 会变成文件保存在本地磁盘 - session钝化
+            3.超时  30分钟 web.xml
+                <session-config>
+                    <session-timeout>分钟</session-timeout>
+                </session-config>
+域对象:
+  ServletContext: 服务器启动期间
+  session: 一次会话
+  request: 一次请求
+  pageContext: page域
+
+JSP:
+  Servlet写动态页面: response.getWriter().print/write
+
+  JSP第一次运行之前会先翻译成xx_jsp.java文件, 再编译成xx_jsp.class
+
+  xx_jsp.java: 在work文件夹中
+    class xx_jsp extends HttpJspBase
+    class HttpJspBase extends HttpServlet
+
+  class xx_jsp 本质就是Servlet
+    核心方法 _jspService - 服务方法, 功能和service方法一致
+    _jspService:
+       html标签 --> out.write()
+       <% %> --> Java代码
+
+  <% 普通java代码 %>: 翻译到service方法中
+  <%=表达式 %>: 翻译到service方法中, out.print(表达式);
+  <%! 声明语句 %>: 翻译成 xx_jsp 类的成员
+
+  <!-- html注释 --> : JSP源码  java代码  前端页面
+  // Java注释       : JSP源码  java代码
+  <%-- JSP注释 --%> : JSP源码
+
+  <%@ JSP指令 %>
+    page: <%@ page 属性 %>
+        contentType: response.setContentType("text/html;charset=utf-8")
+        language: java语言
+        session: true-默认
+        pageEncoding: response.setContentType("text/html;charset=utf-8")
+                      <meta charset=utf-8>
+        buffer: out缓冲区大小, 默认8kb, 设置关闭=none
+        extends: 继承 HttpJspBase
+        import: 导包
+        isErrorPage: 是否是错误页面, 默认false
+        errorPage: 错误页面, 当前页面出现异常后转发到的页面
+        isELIgnored: 是否忽略EL表达式, 默认"false"
+
+    include: <%@ include%> 静态包含
+        引入文件, 属性file="不加虚拟目录uri"
+
+    taglib: <%@ taglib%> 标签库
+        uri:jar路径  prefix:前缀
+
+  JSP内置对象9个: 在<% %>中可以直接使用的对象
+    HttpServletRequest request
+    HttpServletResponse response
+    PageContext pageContext
+        pageContext.findAttribute("name")
+        从 page->request->session->application 按顺序搜索name对应的值, 直到找到为止, 并返回
+    HttpSession session: session = true
+    ServletContext application
+    ServletConfig config
+    JspWriter out
+    Object page = this
+    Throwable exception: isErrorPage = true
+
+JSP动态标签: 意义-减少java脚本的书写
+  <jsp:include page="uri"> 动态包含
+    对比: <%@ include file="uri" %> 静态包含
+         翻译后的java文件
+  <jsp:forward page="uri"/>
+
+EL: expression language   对象属性导航语言 OGNL
+    作用: 为了取代get方法
+    ${对象.属性} - 对象.get属性()
+
+
+
+路径中不加虚拟目录:
+  1.转发
+  2.errorPage
+  3.include中file属性
+
+
+
+
