@@ -1,0 +1,53 @@
+回顾:
+  Session:
+    request.getSession()
+    JSESSIONID 标识session对象
+    JSESSIONID 保存在本地cookie中
+
+    域范围: 一次会话
+
+    生命周期: 第一次调用request.getSession()创建
+             1.手动销毁 session.invalidate()
+             2.服务器非正常关闭
+             3.超时, 默认30分钟 tomcat/conf/web.xml
+  JSP: Servlet
+    JSP文件 -> 翻译成java文件 -> 继承HttpJspBase -> HttpServlet
+
+    html css js..
+    java脚本 <% %> <%= %> <%! %>
+    动态标签  <jsp:include page> <jsp:forward page>
+    JSP指令  <%@ page%> <%@ include file%> <%@ taglib uri prefix%>
+    EL表达式 ${name } -> 从域中找name对应的值
+            param cookie header requestScope
+            对象属性导航语言
+JSTL标签:
+  Java Standard Tag Library
+  通常配合EL表达式来使用
+    1.导入jar包(2个)
+    2.引入标签库
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    3.使用标签
+        <c:if>
+
+设计模式思想: JavaEE三层架构
+    web: servlet, 用于和前端进行交互
+    service: 业务逻辑
+    dao: 数据库操作 CRUD
+    entity/pojo/domain/bean: 实体类
+    test: 单元测试
+    utils: 工具 例如:DruidUtils
+
+1.准备工作:
+   数据库 - user表
+   实体类 - User类
+   jar包 - jdbcTemplate的jar
+           mysql驱动包
+           druid连接池包
+           BeanUtils包
+           jstl标签的包 - 2个
+
+案例:
+  1.删除: DeleteUserServlet?id=1
+  2.添加: AddUserServlet - 注册
+  3.修改: 点击修改按钮 -> 查询显示 -> 编辑内容点击提交 -> 修改
+                    -> FindByIdServlet          -> UpdateUserServlet
