@@ -1,3 +1,11 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: bonnie
+  Date: 2020/9/1
+  Time: 9:08 AM
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- HTML5文档-->
 <!DOCTYPE html>
 <!-- 网页使用的语言 -->
@@ -24,7 +32,7 @@
 <body>
 <div class="container">
     <center><h3>添加联系人页面</h3></center>
-    <form action="" method="post">
+    <form action="${pageContext.request.contextPath}/AddUserServlet" method="post">
         <div class="form-group">
             <label for="name">姓名：</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="请输入姓名">
@@ -32,8 +40,8 @@
 
         <div class="form-group">
             <label>性别：</label>
-            <input type="radio" name="sex" value="男" checked="checked"/>男
-            <input type="radio" name="sex" value="女"/>女
+            <input type="radio" name="gender" value="男" checked="checked"/>男
+            <input type="radio" name="gender" value="女"/>女
         </div>
 
         <div class="form-group">
@@ -43,21 +51,25 @@
 
         <div class="form-group">
             <label for="address">籍贯：</label>
-            <select name="address" class="form-control" id="jiguan">
+            <select name="address" class="form-control" id="address">
                 <option value="广东">广东</option>
                 <option value="广西">广西</option>
                 <option value="湖南">湖南</option>
+                <option value="温州">温州</option>
+                <option value="宁波">宁波</option>
+                <option value="杭州">杭州</option>
+                <option value="光明顶">光明顶</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="qq">QQ：</label>
-            <input type="text" class="form-control" name="qq" placeholder="请输入QQ号码"/>
+            <input type="text" id="qq" class="form-control" name="qq" placeholder="请输入QQ号码"/>
         </div>
 
         <div class="form-group">
             <label for="email">Email：</label>
-            <input type="text" class="form-control" name="email" placeholder="请输入邮箱地址"/>
+            <input type="text" id="email" class="form-control" name="email" placeholder="请输入邮箱地址"/>
         </div>
 
         <div class="form-group" style="text-align: center">
