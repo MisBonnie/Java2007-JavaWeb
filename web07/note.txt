@@ -1,0 +1,102 @@
+JavaEE
+  ServletContext
+  Servlet(service) -> HttpServlet(doGet/doPost)
+    单例模式 -> 线程不安全
+    init destroy   <load-on-startup>
+  HttpServletRequest
+    请求行: uri?get参数 method
+    请求头: Map cookie referer user-agent
+    请求体: post请求参数
+     request.getParameterXX()
+     request.setCharacterEncoding(utf-8); --> post
+        ISO8859-1
+     request.getRequestDispatcher("uri").forward()
+  HttpServletResponse
+    响应行: 状态码 200 304 302 404 405 500
+    响应头: Map  location set-cookie
+    响应体: getOutputStream() getWriter()
+      response.sendRedirect("url")
+      response.setContentType(mime  text/html;charset=utf-8)
+  Cookie : 本地
+      response.addCookie()
+      request.getCookies()
+      cookie.setMaxAge()
+      cookie.setPath
+  Session: 服务器
+      request.getSession()
+      JSESSIONID -> 保存在cookie中
+      session.invalidate()
+  JSP:
+    内置对象:
+        request response
+        session application pageContext
+        config page out exception
+    脚本: <% %>  <%= %>  <%! %>
+    注释: <!-- --> // <%-- --%>
+    JSP指令: <%@ page/taglib/include %>
+    JSP标签: <jsp:include> <jsp:forward>
+    html/css/js
+    标准标签JSTL: <c:if> <c:forEach>
+    EL表达式: ${xx}
+
+Servlet规范:
+    3个核心 Servlet Filter Listener
+
+Filter: 过滤器
+  步骤:
+    1.自定义类, 实现Filter接口
+    2.重点实现doFilter方法
+    3.注册Filter @WebFilter web.xml-配置]
+    4.doFilter中, 直接响应, 要么放行 chain.doFilter
+    5.测试: 发送的是Servlet请求
+
+多个过滤器顺序:
+  web.xml文件中的<filter-mapping>标签顺序
+
+  FilterChain: 过滤器链, 由filter-mapping将过滤器连接串起来的
+     doFilter() -> 执行下一个过滤器, 递归
+
+Filter生命周期:
+    服务器启动创建
+    服务器关闭销毁
+
+FilterConfig
+    <init-param>
+        <param-name>driver</param-name>
+        <param-value>com.mysql.cj.jdbc.Driver</param-value>
+    </init-param>
+    config.getInitParameter("driver");
+ServletConfig
+
+OA: Office Automation
+
+Get请求默认字符集: tomcat字符集一致 - utf-8
+    设置Tomcat字符集为 ISO8859-1
+        tomcat/conf/server.xml
+            URIEncoding="ISO8859-1"
+Post请求默认字符集: ISO8859-1
+    request.setCharacterEncoding("UTF-8");
+
+Listener: 监听器
+   application域     创建和销毁      域内容的改变
+   session域
+   request域
+
+   1.自定义类实现Listener接口
+   2.着重实现方法
+   3.注册
+        <listener>
+            <listener-class>e_listener.MyServletContextListener</listener-class>
+        </listener>
+        @WebListener
+
+   重点掌握: ServletContextListener
+            能监测到服务器的开启和关闭
+   功能:
+    1.周期性调度
+    2.应用的初始化设置
+    3.加载一些配置文件
+
+web应用部署方式
+
+    conf/Catalina/localhost/xx.xml
