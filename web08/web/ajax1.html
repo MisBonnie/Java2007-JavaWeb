@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax</title>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script>
+        $(function() {
+            $("#btn1").click(function () {
+                // 发送get的异步请求
+                $.get("/web08_war_exploded/Demo05Servlet", // 请求地址
+                    "id=1&name=张三", // 提交的请求参数
+                    function(response) {
+                        console.log("响应回来");
+                        console.log("响应回来的数据是: " + response);
+                        $("#myDiv").html(response);
+                    },
+                    "text" // 响应回来的数据类型 text-普通文本
+                );
+            });
+            $("#btn2").click(function () {
+                // 发送post的异步请求
+                $.post("/web08_war_exploded/Demo05Servlet", // 请求地址
+                    // "id=1&name=" + $("#input").val(), // 提交的请求参数
+                    {
+                        id: 1,
+                        name: $("#input").val()
+                    },
+                    function(response) {
+                        // response是响应回来的数据
+                        $("#myDiv").html(response);
+                    },
+                    "text" // 响应回来的数据类型 text-普通文本
+                );
+            });
+            $("#btn3").click(function () {
+                $.ajax({
+                    url: "/web08_war_exploded/Demo05Servlet", // 请求地址
+                    data: {
+                        id: 1,
+                        name: $("#input").val()
+                    }, // 请求参数
+                    success: function(data) {
+                        $("#myDiv").html(data.name + ", " + data.age);
+                    }, // 响应回调函数
+                    dataType: "json",// 响应数据类型
+                    type: "GET",// 请求方式
+                    async: false // 异步/同步, 默认true:异步
+                });
+            });
+            // json
+            var p = { "name": '张三丰', "age": 19 }
+        })
+    </script>
+</head>
+<body>
+    <button id="btn1">使用JQ发送get异步请求</button>
+    <button id="btn2">使用JQ发送post同步请求</button>
+    <button id="btn3">使用JQ发送ajax同步请求</button>
+    <br>
+    <input type="text" id="input">
+    <div id="myDiv"></div>
+</body>
+</html>

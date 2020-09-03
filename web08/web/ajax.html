@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax</title>
+    <script>
+        onload = function() {
+            document.getElementById("btn1").onclick = function(){
+                // 在这里发送ajax请求
+                // 1.创建发送异步请求的对象
+                var request = new XMLHttpRequest();
+
+                // 3.设置响应事件
+                request.onreadystatechange=function(){
+                    // 4.正常接收到响应数据 要执行的代码
+                    if (request.readyState==4 && request.status==200){
+                        document.getElementById("myDiv").innerHTML=request.responseText;
+                    }
+                }
+                // 2.发送请求
+                request.open("GET","/web08_war_exploded/Demo04Servlet",true);
+                request.send();
+
+            }
+            document.getElementById("btn2").onclick = function(){
+                // 在这里发送ajax请求
+                // 1.创建发送异步请求的对象
+                var request = new XMLHttpRequest();
+
+                // 3.设置响应事件
+                request.onreadystatechange=function(){
+                    // 4.正常接收到响应数据 要执行的代码
+                    if (request.readyState==4 && request.status==200){
+                        document.getElementById("myDiv").innerHTML=request.responseText;
+                    }
+                }
+                // 2.发送请求
+                request.open("GET","/web08_war_exploded/Demo04Servlet",false);
+                request.send();
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <button id="btn1">使用JS发送ajax异步请求</button>
+    <button id="btn2">使用JS发送ajax同步请求</button>
+    <br>
+    <input type="text">
+    <div id="myDiv"></div>
+</body>
+</html>
