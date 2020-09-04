@@ -1,0 +1,71 @@
+类加载器:
+  引导类加载器: java.lang.String -> rt.jar JDK基础类
+  扩展类加载器: JDK自带扩展类
+  应用类加载器: ClassPath  自定义类
+    com.zzxx.utils.DruidUtils -> 自定义类
+    org.apache.commons.beanutils.BeanUtils -> 自定义类
+    getResource("com/zzxx/utils/db.properties")
+
+  双亲委派模型:
+    加载一个类的时候, 会先由引导类加载器和扩展类加载器 来搜索有没有对应的类
+    如果有, 那么就加载完成,
+    如果没有, 会继续使用应用类加载器来完成搜索和加载工作
+    如果三个类加载器都找不到对应的类, 那么就会抛出 ClassNotFoundException
+
+    问: 自己定义一个java.lang.String类, 能不能使用?
+
+反射: 操作类的字节码对象 Class对象
+ 1.获得Class对象
+ 2.操作构造器 Constructor
+        newInstance()
+ 3.操作方法 Method
+        invoke()
+ 4.操作成员变量 Field
+        get()
+        set()
+
+注解: @Interface 可以包含属性
+  @Override: 重写
+    只能放在方法上, 没有属性
+  @Deprecated: 过时的
+    放在属性/方法/类/构造方法/局部变量/方法参数
+  @SuppressWarnings: 压制警告
+    放在属性/方法/类/构造方法/局部变量/方法参数
+    必须要有属性
+元注解: 标记注解的注解
+  @Target(ElementType.METHOD): 规定注解的使用位置
+  @Retention(RetentionPolicy.RUNTIME)
+    SOURCE  CLASS  RUNTIME
+
+解析注解: -- 反射
+    MyAnnotation2 annotation = (MyAnnotation2) cls.getAnnotation(MyAnnotation2.class);
+    // 3.获得注解中的属性值
+    int age = annotation.age();
+    System.out.println(age);
+
+    注意: 注解的可见范围必须是 运行阶段 RUNTIME
+
+
+装饰者模式
+    1.和被装饰者拥有相同的父接口
+    2.用被装饰对象来构建装饰对象
+    3.重写要增强的方法
+
+动态代理: 方法增强
+    代理对象: 增强后的对象
+    被代理对象: 原来的对象
+
+    代理对象和被代理对象拥有相同的父接口
+    用被代理对象来构建代理对象
+
+    生成的代理对象和被代理对象 拥有相同的父接口
+    没有直接联系
+
+面向接口开发的优势:
+ 1.解耦合
+ 2.方便动态代理的实现
+
+代理模式: 动态代理 + cglib代理
+
+
+
